@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>WebRTC Calls</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="js/getMediaElement1.css">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+       <style>
+       body {
+        text-align:center;
+       font-size: 11px;
+margin-top: 0;
+font-family: "tahoma", "arial", "verdana", sans-serif, "Lucida Sans";
+}
+            audio, video {
+                -moz-transition: all 1s ease;
+                -ms-transition: all 1s ease;
+                
+                -o-transition: all 1s ease;
+                -webkit-transition: all 1s ease;
+                transition: all 1s ease;
+                vertical-align: top;
+            }
+
+            input {
+                border: 1px solid #d9d9d9;
+                border-radius: 1px;
+                font-size: 1em;
+                margin: .2em;
+                width: 120px;
+                //margin-left: 35%;
+                padding-left: 7px;
+            }
+
+            select {
+                border: 1px solid #d9d9d9;
+                border-radius: 1px;
+                height: 50px;
+                margin-left: 1em;
+                margin-right: -12px;
+                padding: 1.1em;
+                vertical-align: 6px;
+            }
+
+            .setup {
+                border-bottom-left-radius: 0;
+                border-top-left-radius: 0;
+                font-size: 102%;
+                height: 27px;
+               // margin-left: -9px;
+                margin-top: 8px;
+                //position: absolute;
+            }
+
+            p { padding: 1em; }
+
+            #chat-output div, #file-progress div {
+                border: 1px solid black;
+                border-bottom: 0;
+                padding: .1em .4em;
+                text-align: left;
+            }
+
+            #chat-output, #file-progress {
+                margin: 0 0 0 .4em;
+                max-height: 12em;
+                overflow: auto;
+            }
+
+            .data-box input {
+                border: 1px solid black;
+                font-family: inherit;
+                font-size: 1em;
+                margin: .1em .3em;
+                outline: none;
+                padding: .1em .2em;
+                width: 97%;
+            }
+            .menu_div ul
+{
+    padding:0px 0 0 10px;
+    margin:0px;
+    list-style:none;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:13px;
+    height:30px;
+    line-height:30px;
+    background: blue;
+}
+.menu_div ul li
+{
+    float:left;
+}
+.menu_div ul li a
+{
+    color:#FFF;
+    text-decoration:none;
+    padding: 2px 15px 2px 15px;
+}
+.menu_div ul li a:hover
+{
+    color:#FFF;
+    background:#c80202;
+}
+.menu_div ul li#active a
+{
+    color:#FFF;
+    background:#c80202;
+}
+#rooms-list
+{
+//width: 40%;
+//margin-left: 35%;
+}
+.data_box {
+width: 100%;
+//margin-left: 35%;
+}
+.chatkind
+{
+margin: 0px auto;
+display:inline-block;
+font-size:13pt;
+padding:5px;
+border:2px solid gray;
+
+}
+        </style>
+        <script>
+         //   document.createElement('article');
+
+        </script>
+        
+        <!-- webrtc library used for streaming -->
+        <script src="js/firebase.js"> </script>
+        <script src="js/getMediaElement.js"> </script>
+        <script src="js/RTCMultiConnection-v1.6.js"> </script>
+    </head>
+
+    <body>
+    <table border="0" width="90%" align="center">
+<tr>
+	<td></td>
+	<td align="center" ><h2>Анонимный чат: обо всём и об этом тоже...</h2></td>
+		<td align="center" width="220px" style="padding-top: 10px; line-height: 40%"><span id="gotuser" ></span>
+
+</td>
+</tr>
+<tr>
+	<td></td>
+<td bgcolor="blue" width="70%" id="tdmenu"><div class="menu_div">
+ 
+<ul>
+<li><a href="index.html">Главная</a></li>
+<li><a href="text.html">Текстовый</a></li>
+<li><a href="voice.html">Голосовой</a></li>
+<li><a href="video.html">Видео</a></li>
+<li><a href="univer.html">Личные кабинеты</a></li>
+<li><a href="#">Лекции</a></li>
+<li><a href="#">Вебинары</a></li>
+<li><a href="#">Помощь</a></li>
+</ul>
+ 
+</div></td>
+	<td align="center"><!-- <input type="text" id="session-name" style="dispaly: none;">  -->
+<button id="setup-new-session" class="setup">Новый чат</button>
+	</td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+</table>
+        <article>
+           <span class="chatkind">Голос, текст чат </span><br /><span id="open_chat"></span><br />
+
+
+
+            <div class="github-stargazers"></div>
+        
+            <!-- just copy this <section> and next script -->
+            <section class="experiment">
+                
+                <section>
+                    <select id="session" title="Session" style="display: none;">
+                        <option>audio+video+data+screen</option>
+                        <option>audio+video+data</option>						
+                        <option>audio+data+screen</option>
+                        <option>audio+video+screen</option>
+                        <option>audio+video</option>
+                        <option>audio+screen</option>
+                        <option>video+screen</option>
+                        <option>data+screen</option>
+                        <option selected>audio+data</option>
+                        <option>video+data</option>
+                        <option>audio</option>
+                        <option>video</option>
+                        <option>data</option>
+                        <option>screen</option>
+                    </select>
+                    <select id="direction" title="Direction" style="display: none;">
+                        <option>many-to-many</option>
+                        <option selected>one-to-one</option>
+                        <option>one-to-many</option>
+                        <option>one-way</option>
+                    </select>
+                      </section>
+                      
+                       <table  id="main" align="center" border="2" width="90%">
+                       <tr><td width="78%">
+                       <!-- local/remote videos container -->
+                <div id="videos-container"></div>
+          
+			
+            <section class="experiment data-box">
+               
+                <table class="data_box">
+                    <tr>
+                        <td width="70%">
+                            <h2 style="display: block; font-size: 1em; text-align: center;">Text Chat</h2>
+
+                            <div id="chat-output"></div>
+                            <input type="text" id="chat-input" style="font-size: 1.2em;" placeholder="chat message" disabled>
+                        </td>
+                        <td style="background: white;">
+                            <h2 style="display: block; font-size: 1em; text-align: center;">Share Files</h2>
+                            <input type="file" id="file" disabled>
+
+                            <div id="file-progress"></div>
+                        </td>
+                    </tr>
+                </table>
+            </section>
+                       </td>
+                       <td align="center" valign="top">Онлайн персоны в чате<br /><span id="user_stat"></span>
+                                           
+
+                
+                <!-- list of all available broadcasting rooms --><br />
+                <table  id="rooms-list" align="center" border="0"></table>
+                       </td></tr>
+                       
+                       </table>
+
+                
+                
+                </article>
+                
+                <audio id="a_coming" src="coming.mp3" preload="auto"></audio>
+                <audio id="u_coming" src="beep-08b.wav" preload="auto"></audio>
+            <script>
+            var oNotifICall;
+            var idmess;
+            var textnotim;
+            var audioComing = document.getElementById('a_coming');
+            var userComing = document.getElementById('u_coming');
+            		if("username" in localStorage){
+			document.getElementById('gotuser').innerHTML = 'Ваш Nickname <br /><h3>'+localStorage.username+'</h3>';
+			//document.getElementById('session-name').placeholder = localStorage.username;
+			var userName = localStorage.username;
+			console.log("Username present  '%s' ", userName);
+		}
+		else{		
+         // document.getElementById('session-name').placeholder = "Ваш никнейм";
+          				// false click
+				          var setupNewuser = document.getElementById('tdmenu');
+          setupNewuser.addEventListener("click", function(evt) {
+          alert("Необходимо войти");
+          window.location = "index.html";
+          evt.preventDefault();
+				}, false);
+				}
+				
+				            // enable notifications if not already done
+            if (window.webkitNotifications && window.webkitNotifications.checkPermission() != 0) {
+                window.webkitNotifications.requestPermission();
+            }
+                function showNotifICall() {
+        // permission already asked when we registered
+        if (window.webkitNotifications && window.webkitNotifications.checkPermission() == 0) {
+            if (oNotifICall) {
+                oNotifICall.cancel();
+                audioComing.pause();
+            }
+            oNotifICall = window.webkitNotifications.createNotification('notr.png', currentCall()+' '+idmess, textnotim);
+            oNotifICall.ondisplay = function() { document.getElementById('a_coming').play(); };            
+            oNotifICall.onclose = function () { oNotifICall = null
+            audioComing.pause();
+            ; };
+            oNotifICall.onclick = function() { oNotifICall.cancel(); };
+            oNotifICall.show();
+        }
+    }
+//start RTC
+                var connection = new RTCMultiConnection();
+                                    connection.extra = {
+                    username: userName || 'Anonymous',
+                   'session-name': userName || 'Anonymous'
+                    };
+
+                connection.session = {
+                    audio: true,
+                    video: true
+                };
+
+                var roomsList = document.getElementById('rooms-list'), sessions = { };
+                connection.onNewSession = function(session) {
+                    if (sessions[session.sessionid]) return;
+                    sessions[session.sessionid] = session;
+                    userComing.play();
+                    console.log('----------- got extra from session  =  '+session.extra['username']);
+                    var tr = document.createElement('tr');
+                    tr.innerHTML = '<td><strong>' + session.extra['username'] + '</strong> - онлайн</td>' +
+                        '<td><button class="join">Присоединиться</button></td>';
+                    roomsList.insertBefore(tr, roomsList.firstChild);
+
+                    tr.querySelector('.join').setAttribute('data-sessionid', session.sessionid);
+                    tr.querySelector('.join').onclick = function() {
+                        this.disabled = true;
+
+                        session = sessions[this.getAttribute('data-sessionid')];
+                        if (!session) alert('No room to join.');
+
+                        connection.join(session);
+                    };
+                };
+
+                var videosContainer = document.getElementById('videos-container') || document.body;
+                connection.onstream = function(e) {
+                console.log('connection.onstream----------- got extra from connection.onstream  =  '+e.extra["username"]);
+               
+                    var buttons = ['mute-audio', 'mute-video', 'record-audio', 'record-video', 'full-screen', 'volume-slider', 'stop'];
+
+                    if (connection.session.audio && !connection.session.video) {
+                        buttons = ['mute-audio', 'full-screen', 'stop'];
+                    }
+
+                    var mediaElement = getMediaElement(e.mediaElement, {
+                        width: (videosContainer.clientWidth / 2) - 50,
+                        title: e.userid,
+                        buttons: buttons,
+                        onMuted: function(type) {
+                            connection.streams[e.streamid].mute({
+                                audio: type == 'audio',
+                                video: type == 'video'
+                            });
+                        },
+                        onUnMuted: function(type) {
+                            connection.streams[e.streamid].unmute({
+                                audio: type == 'audio',
+                                video: type == 'video'
+                            });
+                        },
+                        onRecordingStarted: function(type) {
+                            // www.RTCMultiConnection.org/docs/startRecording/
+                            connection.streams[e.streamid].startRecording({
+                                audio: type == 'audio',
+                                video: type == 'video'
+                            });
+                        },
+                        onRecordingStopped: function(type) {
+                            // www.RTCMultiConnection.org/docs/stopRecording/
+                            connection.streams[e.streamid].stopRecording(function(blob) {
+                                if (blob.audio) connection.saveToDisk(blob.audio);
+                                else if (blob.video) connection.saveToDisk(blob.audio);
+                                else connection.saveToDisk(blob);
+                            }, type);
+                        },
+                        onStopped: function() {
+                            connection.peers[e.userid].drop();
+                        }
+                    });
+
+                    videosContainer.insertBefore(mediaElement, videosContainer.firstChild);
+
+                    if (e.type == 'local') {
+                        mediaElement.media.muted = true;
+                        mediaElement.media.volume = 0;
+                    }
+                };
+
+                connection.onstreamended = function(e) {
+                    if (e.mediaElement.parentNode && e.mediaElement.parentNode.parentNode && e.mediaElement.parentNode.parentNode.parentNode) {
+                        e.mediaElement.parentNode.parentNode.parentNode.removeChild(e.mediaElement.parentNode.parentNode);
+                    }
+                };
+
+                var setupNewSession = document.getElementById('setup-new-session');
+
+                setupNewSession.onclick = function() {
+                    setupNewSession.disabled = true;
+                    document.getElementById('open_chat').innerHTML = "Чат открыт. Ждем гостей...";
+
+                    var direction = document.getElementById('direction').value;
+                    var _session = document.getElementById('session').value;
+                   //var _session = 'data';
+                    var splittedSession = _session.split('+');
+
+                    var session = { };
+                    for (var i = 0; i < splittedSession.length; i++) {
+                        session[splittedSession[i]] = true;
+                    }
+
+                    var maxParticipantsAllowed = 256;
+
+                    if (direction == 'one-to-one') maxParticipantsAllowed = 1;
+                    if (direction == 'one-to-many') session.broadcast = true;
+                    if (direction == 'one-way') session.oneway = true;
+
+                    //var sessionName = document.getElementById('session-name').value;
+                    var sessionName = userName;
+                    connection.session = session;
+                    connection.maxParticipantsAllowed = maxParticipantsAllowed;
+						/*
+                    if (!!document.querySelector('#fakeDataChannels').checked) {
+                        // http://www.rtcmulticonnection.org/docs/fakeDataChannels/
+                        connection.fakeDataChannels = true;
+                    }
+                    ;
+						*/
+                    connection.sessionid = sessionName || 'Anonymous';
+                    connection.open();
+                };
+
+                connection.onmessage = function(e) {
+                    appendDIV('<font color="blue">'+currentCall()+'  '+e.extra["username"]+':</font>   '+e.data);
+
+                    console.debug(e.userid, 'posted', e.data);
+                   
+                };
+
+                connection.onclose = function(e) {
+                    appendDIV('Чат закончился с  ' + e.extra["username"]);
+                    document.getElementById('open_chat').innerHTML = "";
+                };
+
+                connection.onleave = function(e) {
+                    appendDIV(e.extra["username"] + ' Покинул чат');
+                    document.getElementById('open_chat').innerHTML = "";
+                     console.log('Lave connection '+e.extra["username"]);
+                    document.getElementById('open_chat').innerHTML = '';
+
+                };
+                // Custom leave inishiator
+                initLeav = function (e){
+                connection.leave();
+                document.getElementById('open_chat').innerHTML = '';
+                };
+
+                // on data connection gets open
+                connection.onopen = function(e) {
+                console.log('----------- got extra from connection.onopen  =  '+e.extra["username"]+' userid '+e.userid);
+                idmess = e.extra["username"];
+                textnotim = ' Кто стучится в дверь ко мне? ';
+                showNotifICall();
+                var o_chat = document.getElementById('open_chat');
+o_chat.innerHTML = idmess+' на дротi <button id="leave" onclick="initLeav()">Отстрелить '+idmess+'</button>';
+                document.getElementById('user_stat').innerHTML = 'Сейчaс онлайн: '+connection.stats.numberOfConnectedUsers;
+                    if (document.getElementById('chat-input')) document.getElementById('chat-input').disabled = false;
+                    if (document.getElementById('file')) document.getElementById('file').disabled = false;
+                    if (document.getElementById('open-new-session')) document.getElementById('open-new-session').disabled = true;
+                };
+
+                var progressHelper = { };
+
+                connection.autoSaveToDisk = false;
+
+                connection.onFileProgress = function(chunk) {
+                    var helper = progressHelper[chunk.uuid];
+                    helper.progress.value = chunk.currentPosition || chunk.maxChunks || helper.progress.max;
+                    updateLabel(helper.progress, helper.label);
+                };
+                connection.onFileStart = function(file) {
+                    var div = document.createElement('div');
+                    div.title = file.name;
+                    div.innerHTML = '<label>0%</label> <progress></progress>';
+                    appendDIV(div, fileProgress);
+                    progressHelper[file.uuid] = {
+                        div: div,
+                        progress: div.querySelector('progress'),
+                        label: div.querySelector('label')
+                    };
+                    progressHelper[file.uuid].progress.max = file.maxChunks;
+                };
+
+                connection.onFileEnd = function(file) {
+                    progressHelper[file.uuid].div.innerHTML = '<a href="' + file.url + '" target="_blank" download="' + file.name + '">' + file.name + '</a>';
+                };
+
+                function updateLabel(progress, label) {
+                    if (progress.position == -1) return;
+                    var position = +progress.position.toFixed(2).split('.')[1] || 100;
+                    label.innerHTML = position + '%';
+                }
+
+                function appendDIV(div, parent) {
+                    if (typeof div === 'string') {
+                        var content = div;
+                        div = document.createElement('div');
+                        div.innerHTML = content;
+                    }
+
+                    if (!parent) chatOutput.insertBefore(div, chatOutput.firstChild);
+                    else fileProgress.insertBefore(div, fileProgress.firstChild);
+
+                    div.tabIndex = 0;
+                    div.focus();
+                }
+
+                document.getElementById('file').onchange = function() {
+                    connection.send(this.files[0]);
+                };
+
+                var chatOutput = document.getElementById('chat-output'),
+                    fileProgress = document.getElementById('file-progress');
+
+                var chatInput = document.getElementById('chat-input');
+                chatInput.onkeypress = function(e) {
+                    if (e.keyCode !== 13 || !this.value) return;
+                  //  appendDIV(this.value);
+                      appendDIV('<font color="green">'+currentCall()+'Вы:</font>   '+this.value);
+                    // sending text message
+                    connection.send(this.value);
+
+                    this.value = '';
+                };
+                connection.getStats(function(stat) {
+    // stat.numberOfConnectedUsers
+});
+
+// you can directly access "numberOfConnectedUsers" later like this:
+console.log(connection.stats.numberOfConnectedUsers);
+                if(connection.stats.numberOfConnectedUsers  != undefined)
+      document.getElementById('user_stat').innerHTML = 'Сейчaс онлайн: '+connection.stats.numberOfConnectedUsers;
+      // current time
+      function addZero(i){
+        if (i<10) 
+          {
+          i="0" + i;
+          }
+        return i;
+      }
+      
+      function currentCall() {
+        var d=new Date();
+        var h=addZero(d.getHours());
+        var m=addZero(d.getMinutes());
+        var s=addZero(d.getSeconds());
+        return calltime=h + ":" + m + ":" + s;
+      }
+      
+                connection.connect();
+            </script>
+
+
+    </body>
+</html>

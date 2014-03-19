@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+
+	<title>Main</title>
+    <style>
+    body {
+        text-align:center;
+       font-size: 11px;
+margin-top: 0;
+font-family: "tahoma", "arial", "verdana", sans-serif, "Lucida Sans";
+}
+#Hr-5 {
+list-style:none;
+margin:0;
+padding:0;
+float:left;
+}
+#Hr-5 li {
+float:left;
+margin:0;
+padding:0;
+
+}
+#Hr-5 li a {
+display:inline;
+float:left;
+width:auto;
+height:auto;
+overflow:hidden;
+margin:0;
+padding:3px 6px;
+text-decoration:none;
+text-transform:capitalize;
+text-align:center;
+font-weight:bold;
+font-size:12px;
+font-style:normal;
+color:#F2EFEF;
+border-right:1px dotted #060606;
+background:#222121;
+background:-webkit-gradient(linear,left top,left bottom,color-stop(#131212,0),color-stop(#222121,0.4),color-stop(#474646,0.8),color-stop(#3C3939,1));
+background:-webkit-linear-gradient(top,#131212 0%,#222121 40%,#474646 80%,#3C3939 100%);
+background:   -moz-linear-gradient(top,#131212 0%,#222121 40%,#474646 80%,#3C3939 100%);
+background:     -o-linear-gradient(top,#131212 0%,#222121 40%,#474646 80%,#3C3939 100%);
+background:        linear-gradient(top,#131212 0%,#222121 40%,#474646 80%,#3C3939 100%);
+
+-moz-transition:0.5s ease-out;
+-webkit-transition:0.5s ease-out;
+transition:0.5s ease-out;
+}
+#Hr-5 li:first-child a {
+-moz-border-radius:8px 0 0 8px;
+-webkit-border-radius:8px 0 0 8px;
+border-radius:8px 0 0 8px;
+}
+#Hr-5 li:last-child a {
+-moz-border-radius:0 8px 8px 0;
+-webkit-border-radius:0 8px 8px 0;
+border-radius:0 8px 8px 0;
+}
+
+#Hr-5 li a:hover,#Hr-5 li a:active {
+background-color:#3047DB;
+background:-webkit-gradient(linear,left top,left bottom,color-stop(#3047DB,0),color-stop(#3088DB,0.4),color-stop(#48AAE7,0.8),color-stop(#48BAE7,1));
+background:-webkit-linear-gradient(top,#3047DB 0%,#3088DB 40%,#48AAE7 80%,#48BAE7 100%);
+background:   -moz-linear-gradient(top,#3047DB 0%,#3088DB 40%,#48AAE7 80%,#48BAE7 100%);
+background:     -o-linear-gradient(top,#3047DB 0%,#3088DB 40%,#48AAE7 80%,#48BAE7 100%);
+background:        linear-gradient(top,#3047DB 0%,#3088DB 40%,#48AAE7 80%,#48BAE7 100%);
+color:#97410F;
+-moz-transition:0.5s ease-in;
+-webkit-transition:0.5s ease-in;
+transition:0.5s ease-in;
+border-right:1px solid transparent;
+}
+    </style>
+</head>
+
+<body>
+<table border="2" width="90%" align="center">
+<tr>
+	<td></td>
+	<td align="center"><h2>Анонимный чат: обо всём и об этом тоже...</h2></td>
+	<td align="center" width="220px" style="padding-top: 10px;"><span id="gotuser" style="line-height: 40%";>
+	<form id="Formnick" >
+ <input type="text" id="username" placeholder="Ваш никнейм" style="padding: 5px 0px 5px 35px;">
+ <button id="setup-new-username" class="setup">Войти</button>
+</form></span>
+	</td>
+</tr>
+<tr>
+	<td></td>
+<td bgcolor="blue" width="70%" id="tdmenu"><div class="menu_div">
+ 
+<ul id="Hr-5">
+<li><a href="index.html">Главная</a></li>
+<li><a href="text.html">Текстовый</a></li>
+<li><a href="voice.html">Голосовой</a></li>
+<li><a href="video.html">Видео</a></li>
+<li><a href="univer.html">Личные кабинеты</a></li>
+<li><a href="#">Лекции</a></li>
+<li><a href="#">Вебинары</a></li>
+<li><a href="#">Помощь</a></li>
+</ul>
+ 
+</div></td>
+	<td></td>
+</tr>
+</table>
+<table align="center" width="90%" border="2" >
+<tr>
+	<td width="80%" align="left">ПОПУЛЯРНЫЕ ТЕМЫ<br />
+	<pre>
+	Секс 
+Тактичное, но откровенное обсуждение этой деликатной темы
+
+Формула любви
+Теория и практика виртуальных и реальных знакомств, соблазнения, флирта. Семейные отношения.
+
+Отцы и дети
+Взаимоотношения поколений, а также вопросы воспитания и рождения детей.
+
+Философия, психология, непознанное
+Что есть мир и что такое человек в этом мире. Сложные психологические, философические и религиозные вопросы. НЛО и прочее.
+Подразделы:  Палата №6
+
+Знакомства
+Знакомства, встречи в реале.
+
+NO PROBLEM! Серьезно о серьёзном
+Сложности в семье? На работе? В быту? 
+	</pre>
+	</td>
+	<td valign="top">Сейчас в чате</td>
+</tr>
+</table>
+<script>
+var ristration = false;
+var setNewuser = document.getElementById('tdmenu');
+function alertNickname()
+{
+
+var person=prompt("Ваш никнэйм","Дядюшка Чиличало");
+
+if (person!=null && person!="Дядюшка Чиличало")
+  {
+  ristration = true;
+  setNewuser.removeEventListener("click", myEventListener, false);
+  console.log('got from input = "%s"  length = "%s"', person, person.length);
+            localStorage.username = person;
+          document.getElementById('gotuser').innerHTML = 'Ваш Nickname <br /><h3>'+person+'</h3>';
+  }
+}
+
+
+
+		if("username" in localStorage){
+			document.getElementById('gotuser').innerHTML = 'Ваш Nickname <br /><h3>'+localStorage.username+'</h3>';
+			console.log("Username present  '%s' ", localStorage.username);
+			ristration = true;
+			setNewuser.removeEventListener("click", myEventListener, false);
+		}
+		else{		
+          				// false click
+          				if(ristration != true){ 
+				          var myEventListener = function(evt) {
+                            alertNickname();
+                            //alert("Ваш никнэйм");
+                            evt.preventDefault();
+                  };
+                  setNewuser.addEventListener("click", myEventListener, false);			
+	}
+				  // try to get new user from form
+          var setupNewuser = document.getElementById('setup-new-username');
+          setupNewuser.addEventListener("click", function(evt) {
+          var userName = document.getElementById('username').value;
+          console.log('got from input = "%s"  length = "%s"', userName, userName.length);
+          if(userName.length >0 && userName !=""){
+          ristration = true;
+           setNewuser.removeEventListener("click", myEventListener, false);
+          localStorage.username = userName;
+          document.getElementById('gotuser').innerHTML = 'Ваш Nickname <br /><h3>'+userName+'</h3>';
+          }
+          else {
+          alert("Чё то не то!");
+          }
+				    evt.preventDefault();
+				}, false);
+				}
+
+</script>
+</body>
+</html>
